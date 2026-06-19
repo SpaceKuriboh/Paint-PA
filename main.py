@@ -8,68 +8,53 @@ def iniciarforma(event):
     xi = event.x
     yi = event.y
 
+def desenhar(xi, yi , xf , yf , Forma, temp):
+
+    #Verifica se e para desnhar ou se e temporario
+
+    if temp:
+        tag = "temp"
+    else:
+        tag = None
+    
+    if Forma == "linha":
+        CanvaGrid.create_line(
+            xi, yi , xf , yf,
+            fill = CoresLinha.get(),
+            tags = tag,
+            width = 3
+        )
+    
+    elif Forma == "retangulo":
+        CanvaGrid.create_rectangle(
+            xi , yi , xf, yf,
+            fill = CoresPreenchimento.get(),
+            outline = CoresLinha.get(),
+            tags = tag,
+            width = 3
+        )
+    
+    elif Forma == "circulo":
+        CanvaGrid.create_oval(
+            xi, yi , xf, yf,
+            fill =  CoresPreenchimento.get(),
+            outline = CoresLinha.get(),
+            tags = tag,
+            width = 3
+        )
+
 
 def atualizarforma(event):
-    global xi, yi, xf, yf
     xf = event.x
     yf = event.y
-    Forma = forma.get()
-
     CanvaGrid.delete("temp")
-    if Forma == "linha":
-        CanvaGrid.create_line(
-            xi, yi, xf, yf,
-            fill=CoresLinha.get(),
-            tags="temp",
-            width=3,
-        )
-
-    elif Forma == "retangulo":
-        CanvaGrid.create_rectangle(
-            xi, yi, xf, yf,
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            tags="temp",
-            width=3,
-        )
-
-    elif Forma == "circulo":
-        CanvaGrid.create_oval(
-            xi, yi, xf, yf,
-            tags="temp",
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            width=3,
-        )
-
-
+    desenhar(xi, yi, xf, yf, forma.get(), True)
+    
 def gravarforma(event):
-    global xi, yi, xf, yf
+    xf = event.x
+    yf = event.y
     CanvaGrid.delete("temp")
-    Forma = forma.get()
-
-    if Forma == "linha":
-        CanvaGrid.create_line(
-            xi, yi, xf, yf,
-            fill=CoresLinha.get(),
-            width=3,
-        )
-
-    elif Forma == "retangulo":
-        CanvaGrid.create_rectangle(
-            xi, yi, xf, yf,
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            width=3,
-        )
-
-    elif Forma == "circulo":
-        CanvaGrid.create_oval(
-            xi, yi, xf, yf,
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            width=3,
-        )
+    desenhar(xi, yi , xf , yf , forma.get(), False)
 
 
 # ----------- Main ----------------
