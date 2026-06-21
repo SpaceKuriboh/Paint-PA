@@ -1,78 +1,16 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter.ttk import Combobox
-xi, yi, = 0, 0
-
-def iniciarforma(event):
-    global xi, yi
-    xi = event.x
-    yi = event.y
-
-
-def desenhar(xi, yi, xf, yf, Forma, temp):
-    # Verifica se e para desnhar ou se e temporario
-
-    if Forma == "linha" or Forma=="livre":
-        CanvaGrid.create_line(
-            xi, yi, xf, yf,
-            fill=CoresLinha.get(),
-            tags=str(temp),
-            width=4
-        )
-
-    elif Forma == "retangulo":
-        CanvaGrid.create_rectangle(
-            xi, yi, xf, yf,
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            tags=str(temp),
-            width=4
-        )
-
-    elif Forma == "oval":
-        CanvaGrid.create_oval(
-            xi, yi, xf, yf,
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            tags=str(temp),
-            width=4
-        )
-    elif Forma == "circulo":
-        CanvaGrid.create_oval(
-            xi-((xf-xi)**2+(yf-yi)**2)**(1/2), yi-((xf-xi)**2+(yf-yi)**2)**(1/2), xi+((xf-xi)**2+(yf-yi)**2)**(1/2), yi+((xf-xi)**2+(yf-yi)**2)**(1/2),
-            fill=CoresPreenchimento.get(),
-            outline=CoresLinha.get(),
-            tags=str(temp),
-            width=4
-        )
-
-def atualizarforma(event):
-    if forma.get()=="livre":
-        global xi,yi
-        xf = event.x
-        yf = event.y
-        desenhar(xi, yi, xf, yf, "livre", False)
-        xi,yi=xf,yf
-    else:
-        xf = event.x
-        yf = event.y
-        CanvaGrid.delete("True")
-        desenhar(xi, yi, xf, yf, forma.get(), True)
-
-
-def gravarforma(event):
-    xf = event.x
-    yf = event.y
-    CanvaGrid.delete("True")
-    desenhar(xi, yi, xf, yf, forma.get(), False)
-
-
+from poo import *
 # ----------- Main ----------------
-
-
 janela = Tk()
 janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
 forma = StringVar(janela)
+objeto=void()
+formas = {
+    "retangulo": Retangulo,
+    "oval": Oval,
+    "circulo": Circulo,
+    "livre": Livre,
+    "linha": Reta,
+}
 
 # ----------- Fazendo a Barra de Escolhas -----------
 
@@ -174,12 +112,41 @@ CoresPreenchimento = Combobox(
 )
 CoresPreenchimento.grid(row=0, column=9, padx=5, pady=5)
 
+TXTEspessura = Label(FrameGrid, text="Selecione a Expessura: ")
+TXTEspessura.grid(row=0, column=10, padx=1, pady=5)
+Espessura = Combobox(
+    FrameGrid,
+    values=['1', '2', '3', '4', '5', '6', '7', '8'],
+    state="readonly",
+    width=10,
+)
+Espessura.grid(row=0, column=11, padx=5, pady=5)
 # ----------------- Definindo Opcoes Iniciais -------------------
-
 CoresLinha.set("black")
 CoresPreenchimento.set("black")
+Espessura.set(4)
+
+def iniciarforma(event):
+    global forma,objeto
+    xi = event.x
+    yi = event.y
+    objeto = formas[forma.get()](
+        CanvaGrid,
+        xi, yi, xi, yi,
+        CoresLinha.get(),
+        int(Espessura.get()),
+        fill=CoresPreenchimento.get(),
+        temp=True
+    )
+
+def atualizar(event):
+    global objeto
+    objeto.atualizarforma(event)
+def gravar(event):
+    global objeto
+    objeto.gravarforma(event)
 CanvaGrid.bind("<ButtonPress-1>", iniciarforma)
-CanvaGrid.bind("<B1-Motion>", atualizarforma)
-CanvaGrid.bind("<ButtonRelease-1>", gravarforma)
+CanvaGrid.bind("<B1-Motion>", atualizar)
+CanvaGrid.bind("<ButtonRelease-1>", gravar)
 
 janela.mainloop()
