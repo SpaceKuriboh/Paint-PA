@@ -1,4 +1,9 @@
 from poo import *
+def verificarpoligono():
+    global objeto,void
+    if isinstance(objeto, Poligono):
+        objeto=void()
+        CanvaGrid.delete("true2","True")
 # ----------- Main ----------------
 janela = Tk()
 janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
@@ -33,6 +38,7 @@ DesenharLinhas = Radiobutton(
     variable=forma,
     value="linha",
     bg="lightgrey",
+    command=verificarpoligono
 )
 DesenharLinhas.grid(row=0, column=0, padx=5, pady=5)
 
@@ -45,6 +51,7 @@ DesenharLivre = Radiobutton(
     variable=forma,
     value="livre",
     bg="lightgrey",
+    command=verificarpoligono
 )
 DesenharLivre.grid(row=0, column=1, padx=5, pady=5)
 
@@ -57,6 +64,7 @@ DesenharRetangulos = Radiobutton(
     variable=forma,
     value="retangulo",
     bg="lightgrey",
+    command=verificarpoligono
 )
 DesenharRetangulos.grid(row=0, column=2, padx=5, pady=5)
 
@@ -68,6 +76,7 @@ DesenharCirculos = Radiobutton(
     variable=forma,
     value="circulo",
     bg="lightgrey",
+    command=verificarpoligono
 )
 DesenharCirculos.grid(row=0, column=3, padx=5, pady=5)
 
@@ -78,7 +87,7 @@ DesenharPoligonos = Radiobutton(
     indicatoron=False,
     variable=forma,
     value="poligono",
-    bg="lightgrey",
+    bg="lightgrey"
 )
 DesenharPoligonos.grid(row=0, column=4, padx=5, pady=5)
 
@@ -90,6 +99,7 @@ DesenharOvais = Radiobutton(
     variable=forma,
     value="oval",
     bg="lightgrey",
+    command=verificarpoligono
 )
 DesenharOvais.grid(row=0, column=5, padx=5, pady=5)
 
@@ -98,7 +108,7 @@ ApagarTudo = Button(
     text="Apagar Tudo",
     width=12,
     bg="lightgrey",
-    command=lambda: CanvaGrid.delete("all"),
+    command=lambda: [CanvaGrid.delete("all"),verificarpoligono()],
 )
 ApagarTudo.grid(row=0, column=6, padx=5, pady=5)
 
@@ -154,6 +164,7 @@ def iniciarforma(event):
     else:
         if objeto.marcarponto(event):
             objeto=void()
+
 def atualizar(event):
     global objeto
     objeto.atualizarforma(event)
