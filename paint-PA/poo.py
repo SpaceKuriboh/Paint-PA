@@ -42,7 +42,42 @@ class Pincel(ABC):
         self.temp=False
         self.desenhar()
 
-
+class Poligono:
+    def __init__(self,canva,xi,yi,xf,yf,outline,expessura, fill= None,temp=None):
+        self.canva=canva
+        self.pontos=[xi,yi]
+        self.xi,self.yi,self.xf,self.yf=xi,yi,xf,yf
+        self.outline=outline
+        self.fill=fill
+        self.expessura=expessura
+        self.inix,self.iniy=self.xi,self.yi
+    def atualizarforma(self,event):
+        self.xf = event.x
+        self.yf = event.y
+        self.canva.delete("True")
+        self.desenhar("True")
+    def desenhar(self,tag):
+        self.canva.create_line(
+            self.xi,
+            self.yi,
+            self.xf,
+            self.yf,
+            fill=self.outline,
+            tags=tag,
+            width=self.expessura,
+        )
+    def marcarponto(self,event):
+        if abs(event.x-self.inix)<=8 and abs(event.y-self.iniy)<=8:
+            self.canva.delete("True")
+            self.canva.delete("true2")
+            self.canva.create_polygon(*self.pontos,fill=self.fill, outline=self.outline,width=self.expessura)
+            return True
+        else:
+            self.pontos.extend([event.x,event.y])
+            self.canva.delete("True")
+            self.desenhar("true2")
+            self.xi,self.yi=self.xf,self.yf
+            return False
 class Livre(Pincel):
     def desenhar(self):
         self.canva.create_line(
@@ -116,7 +151,6 @@ class Circulo(Pincel):
             outline=self.outline,
             tags=str(self.temp),
         )
-
 
 
 

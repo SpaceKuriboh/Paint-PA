@@ -10,6 +10,7 @@ formas = {
     "circulo": Circulo,
     "livre": Livre,
     "linha": Reta,
+    "poligono":Poligono
 }
 
 # ----------- Fazendo a Barra de Escolhas -----------
@@ -70,6 +71,17 @@ DesenharCirculos = Radiobutton(
 )
 DesenharCirculos.grid(row=0, column=3, padx=5, pady=5)
 
+DesenharPoligonos = Radiobutton(
+    FrameGrid,
+    text="◊",
+    width=5,
+    indicatoron=False,
+    variable=forma,
+    value="poligono",
+    bg="lightgrey",
+)
+DesenharPoligonos.grid(row=0, column=4, padx=5, pady=5)
+
 DesenharOvais = Radiobutton(
     FrameGrid,
     text="⬭",
@@ -79,7 +91,7 @@ DesenharOvais = Radiobutton(
     value="oval",
     bg="lightgrey",
 )
-DesenharOvais.grid(row=0, column=4, padx=5, pady=5)
+DesenharOvais.grid(row=0, column=5, padx=5, pady=5)
 
 ApagarTudo = Button(
     FrameGrid,
@@ -88,65 +100,74 @@ ApagarTudo = Button(
     bg="lightgrey",
     command=lambda: CanvaGrid.delete("all"),
 )
-ApagarTudo.grid(row=0, column=5, padx=5, pady=5)
+ApagarTudo.grid(row=0, column=6, padx=5, pady=5)
 
 # --------------------- Caixas de Selecao --------------------------
 
 TXTLinha = Label(FrameGrid, text="Cor da Linha: ")
-TXTLinha.grid(row=0, column=6, padx=1, pady=5)
+TXTLinha.grid(row=0, column=7, padx=1, pady=5)
 CoresLinha = Combobox(
     FrameGrid,
     values=["blue", "red", "green", "yellow", "purple", "pink", "black"],
     state="readonly",
     width=10,
 )
-CoresLinha.grid(row=0, column=7, padx=5, pady=5)
+CoresLinha.grid(row=0, column=8, padx=5, pady=5)
 
 TXTPreenchimento = Label(FrameGrid, text="Cor do Preenchimento: ")
-TXTPreenchimento.grid(row=0, column=8, padx=1, pady=5)
+TXTPreenchimento.grid(row=0, column=9, padx=1, pady=5)
 CoresPreenchimento = Combobox(
     FrameGrid,
     values=["blue", "red", "green", "yellow", "purple", "pink", "black"],
     state="readonly",
     width=10,
 )
-CoresPreenchimento.grid(row=0, column=9, padx=5, pady=5)
+CoresPreenchimento.grid(row=0, column=10, padx=5, pady=5)
 
 TXTEspessura = Label(FrameGrid, text="Selecione a Expessura: ")
-TXTEspessura.grid(row=0, column=10, padx=1, pady=5)
+TXTEspessura.grid(row=0, column=11, padx=1, pady=5)
 Espessura = Combobox(
     FrameGrid,
     values=['1', '2', '3', '4', '5', '6', '7', '8'],
     state="readonly",
     width=10,
 )
-Espessura.grid(row=0, column=11, padx=5, pady=5)
+Espessura.grid(row=0, column=12, padx=5, pady=5)
 # ----------------- Definindo Opcoes Iniciais -------------------
 CoresLinha.set("black")
 CoresPreenchimento.set("black")
 Espessura.set(4)
 
 def iniciarforma(event):
-    global forma,objeto
-    xi = event.x
-    yi = event.y
-    objeto = formas[forma.get()](
-        CanvaGrid,
-        xi, yi, xi, yi,
-        CoresLinha.get(),
-        int(Espessura.get()),
-        fill=CoresPreenchimento.get(),
-        temp=True
-    )
-
+    global forma, objeto
+    if (forma.get()=="poligono" and not isinstance(objeto,Poligono)) or forma.get()!="poligono":
+        xi = event.x
+        yi = event.y
+        objeto = formas[forma.get()](
+            CanvaGrid,
+            xi, yi, xi, yi,
+            CoresLinha.get(),
+            int(Espessura.get()),
+            fill=CoresPreenchimento.get(),
+            temp=True
+        )
+    else:
+        if objeto.marcarponto(event):
+            objeto=void()
 def atualizar(event):
     global objeto
     objeto.atualizarforma(event)
-def gravar(event):
+def atualizarpoligono(event):
     global objeto
-    objeto.gravarforma(event)
+    if isinstance(objeto, Poligono):
+        objeto.atualizarforma(event)
+def gravar(event):
+    if forma.get()!="poligono":
+        global objeto
+        objeto.gravarforma(event)
 CanvaGrid.bind("<ButtonPress-1>", iniciarforma)
 CanvaGrid.bind("<B1-Motion>", atualizar)
+CanvaGrid.bind("<Motion>", atualizarpoligono)
 CanvaGrid.bind("<ButtonRelease-1>", gravar)
 
 janela.mainloop()
