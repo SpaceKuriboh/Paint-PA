@@ -1,9 +1,14 @@
-from model import *
-class janela:
+from tkinter import *
+from tkinter import ttk
+from tkinter.ttk import Combobox
+from controller import *
+class Janela:
     def __init__(self):
+        self.janela = Tk()
+        self.janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
     # ------ Fazendo a Barra de Escolhas ----
-        self.FrameGrid = Frame(janela, bg="lightgray", borderwidth=3, relief="flat")
-        self.CanvaGrid = Canvas(janela, bg="white", width=1920, height=1080, borderwidth=3, relief="ridge")
+        self.FrameGrid = Frame(self.janela, bg="lightgray", borderwidth=3, relief="flat")
+        self.CanvaGrid = Canvas(self.janela, bg="white", width=1920, height=1080, borderwidth=3, relief="ridge")
     # ------ Fazendo a Barra de Escolhas ----
 
     # -------------- BUTOES -----------------
