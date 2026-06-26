@@ -1,14 +1,16 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter.ttk import Combobox
 from controller import *
+from model import *
 class Janela:
     def __init__(self):
+        self.controller=Void()
         self.janela = Tk()
         self.janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
+        self.objeto=Void()
+        self.forma=StringVar()
     # ------ Fazendo a Barra de Escolhas ----
         self.FrameGrid = Frame(self.janela, bg="lightgray", borderwidth=3, relief="flat")
         self.CanvaGrid = Canvas(self.janela, bg="white", width=1920, height=1080, borderwidth=3, relief="ridge")
+
     # ------ Fazendo a Barra de Escolhas ----
 
     # -------------- BUTOES -----------------
@@ -17,47 +19,47 @@ class Janela:
                                 text="/",
                                 width=5,
                                 indicatoron=False,
-                                variable=forma,
+                                variable=self.forma,
                                 value="linha",
                                 bg="lightgrey",
-                                command=verificarpoligono
+                                command=self.controller.verificarpoligono
                             )
         self.DesenharLivre = Radiobutton(
                                 self.FrameGrid,
                                 text="~",
                                 width=5,
                                 indicatoron=False,
-                                variable=forma,
+                                variable=self.forma,
                                 value="livre",
                                 bg="lightgrey",
-                                command=verificarpoligono
+                                command=self.controller.verificarpoligono
                             )
         self.DesenharRetangulos = Radiobutton(
                                     self.FrameGrid,
                                     text="▯",
                                     width=5,
                                     indicatoron=False,
-                                    variable=forma,
+                                    variable=self.forma,
                                     value="retangulo",
                                     bg="lightgrey",
-                                    command=verificarpoligono
+                                    command=self.controller.verificarpoligono
                                 )
         self.DesenharCirculos = Radiobutton(
                                             self.FrameGrid,
                                             text="O",
                                             width=5,
                                             indicatoron=False,
-                                            variable=forma,
+                                            variable=self.forma,
                                             value="circulo",
                                             bg="lightgrey",
-                                            command=verificarpoligono
+                                            command=self.controller.verificarpoligono
                                         )
         self.DesenharPoligonos = Radiobutton(
                                     self.FrameGrid,
                                     text="◊",
                                     width=5,
                                     indicatoron=False,
-                                    variable=forma,
+                                    variable=self.forma,
                                     value="poligono",
                                     bg="lightgrey"
                                 )
@@ -66,17 +68,17 @@ class Janela:
                                     text="⬭",
                                     width=5,
                                     indicatoron=False,
-                                    variable=forma,
+                                    variable=self.forma,
                                     value="oval",
                                     bg="lightgrey",
-                                    command=verificarpoligono
+                                    command=self.controller.verificarpoligono
                                 )
         self.ApagarTudo = Button(
                                 self.FrameGrid,
                                 text="Apagar Tudo",
                                 width=12,
                                 bg="lightgrey",
-                                command=lambda: [CanvaGrid.delete("all"),verificarpoligono()],
+                                command=lambda: [self.CanvaGrid.delete("all"),self.controller.verificarpoligono()],
                             )
     # -------------- BUTOES -------------------------
     # -------------- Caixas de Selecao --------------

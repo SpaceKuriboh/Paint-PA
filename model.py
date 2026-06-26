@@ -3,15 +3,20 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import Combobox
 
+from netaddr.strategy.ipv6 import width
 
-class void:
+
+class Void:
     def iniciarforma(self):
         pass
     def atualizarforma(self):
         pass
     def gravarforma(self):
         pass
-
+    def verificarpoligono(self):
+        pass
+    def desenhar(self):
+        pass
 
 class Pincel(ABC):
 
@@ -26,26 +31,13 @@ class Pincel(ABC):
         self.fill = fill
         self.temp = temp
 
-    @abstractmethod
-    def desenhar(self): ...
 
-    def atualizarforma(self,event):
-        self.xf = event.x
-        self.yf = event.y
-        self.canva.delete("True")
-        self.temp=True
-        self.desenhar()
 
-    def gravarforma(self,event):
-        self.xf = event.x
-        self.yf = event.y
-        self.canva.delete("True")
-        self.temp=False
-        self.desenhar()
+
 
 class Poligono:
 
-    def __init__(self,canva,xi,yi,xf,yf,outline,expessura, fill= None):
+    def __init__(self,canva,xi,yi,xf,yf,outline,expessura, fill= None,temp=None):
         self.canva=canva
         self.pontos=[xi,yi]
         self.xi,self.yi,self.xf,self.yf=xi,yi,xf,yf
@@ -54,21 +46,17 @@ class Poligono:
         self.expessura=expessura
         self.inix,self.iniy=self.xi,self.yi
 
-    def atualizarforma(self,event):
-        self.xf = event.x
-        self.yf = event.y
-        self.canva.delete("True")
-        self.desenhar("True")
 
-    def desenhar(self,tag):
+    def desenhar(self,tag="True"):
         self.canva.create_line(
             self.xi,
             self.yi,
             self.xf,
             self.yf,
+            self.outline,
             fill=self.outline,
-            tags=tag,
-            width=self.expessura,
+            tag=tag,
+            width=self.expessura
         )
 
     def marcarponto(self,event):
@@ -101,12 +89,7 @@ class Livre(Pincel):
             width=self.expessura,
         )
 
-    def atualizarforma(self,event):
-        self.xf = event.x
-        self.yf = event.y
-        self.desenhar()
-        self.temp=False
-        self.xi, self.yi = self.xf, self.yf
+
 
 
 class Reta(Pincel):
@@ -134,7 +117,7 @@ class Retangulo(Pincel):
             fill=self.fill,
             outline=self.outline,
             tags=str(self.temp),
-            width=self.expessura,
+            width=self.expessura
         )
 
 
@@ -149,7 +132,7 @@ class Oval(Pincel):
             fill=self.fill,
             outline=self.outline,
             tags=str(self.temp),
-            width=self.expessura,
+            width=self.expessura
         )
 
 
@@ -166,4 +149,5 @@ class Circulo(Pincel):
             fill=self.fill,
             outline=self.outline,
             tags=str(self.temp),
+            width=self.expessura
         )
