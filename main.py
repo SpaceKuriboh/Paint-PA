@@ -3,5 +3,5 @@ from view import Janela
 
 janelaPrincipal = Janela()
 controller = Controller(janelaPrincipal)
-Janela.controller=controller
+janelaPrincipal.controller = controller
 janelaPrincipal.janela.mainloop()

@@ -3,8 +3,6 @@ from tkinter import *
 from tkinter import ttk
 from tkinter.ttk import Combobox
 
-from netaddr.strategy.ipv6 import width
-
 
 class Void:
     def iniciarforma(self):
@@ -20,7 +18,7 @@ class Void:
 
 class Pincel(ABC):
 
-    def __init__(self, canva, xi, yi, xf, yf, outline,expessura, fill= None, temp=None):
+    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, fill=None, temp=None):
         self.canva = canva
         self.xi = xi
         self.yi = yi
@@ -32,50 +30,42 @@ class Pincel(ABC):
         self.temp = temp
 
 
-
-
-
 class Poligono:
 
-    def __init__(self,canva,xi,yi,xf,yf,outline,expessura, fill= None,temp=None):
-        self.canva=canva
-        self.pontos=[xi,yi]
-        self.xi,self.yi,self.xf,self.yf=xi,yi,xf,yf
-        self.outline=outline
-        self.fill=fill
-        self.expessura=expessura
-        self.inix,self.iniy=self.xi,self.yi
+    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, fill=None, temp=None):
+        self.canva = canva
+        self.pontos = [xi, yi]
+        self.xi, self.yi, self.xf, self.yf = xi, yi, xf, yf
+        self.outline = outline
+        self.fill = fill
+        self.expessura = expessura
+        self.inix, self.iniy = self.xi, self.yi
 
-
-    def desenhar(self,tag="True"):
+    def desenhar(self, tag="True"):
         self.canva.create_line(
             self.xi,
             self.yi,
             self.xf,
             self.yf,
-            self.outline,
             fill=self.outline,
-            tag=tag,
+            tags=tag,
             width=self.expessura
         )
 
-    def marcarponto(self,event):
-
-        if abs(event.x-self.inix)<=8 and abs(event.y-self.iniy)<=8:
+    def marcarponto(self, event):
+        if abs(event.x - self.inix) <= 8 and abs(event.y - self.iniy) <= 8:
             self.canva.delete("True")
             self.canva.delete("true2")
-            self.canva.create_polygon(*self.pontos,fill=self.fill, outline=self.outline,width=self.expessura)
-
+            self.canva.create_polygon(*self.pontos, fill=self.fill, outline=self.outline, width=self.expessura)
             return True
-        
         else:
-            self.pontos.extend([event.x,event.y])
+            self.pontos.extend([event.x, event.y])
             self.canva.delete("True")
             self.desenhar("true2")
-            self.xi,self.yi=self.xf,self.yf
-
+            self.xi, self.yi = self.xf, self.yf
             return False
-        
+
+
 class Livre(Pincel):
 
     def desenhar(self):
@@ -88,8 +78,6 @@ class Livre(Pincel):
             tags=str(self.temp),
             width=self.expessura,
         )
-
-
 
 
 class Reta(Pincel):
@@ -139,7 +127,6 @@ class Oval(Pincel):
 class Circulo(Pincel):
 
     def desenhar(self):
-
         raio = ((self.xf - self.xi) ** 2 + (self.yf - self.yi) ** 2) ** 0.5
         self.canva.create_oval(
             self.xi - raio,
