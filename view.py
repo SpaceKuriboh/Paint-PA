@@ -4,23 +4,27 @@ from tkinter.colorchooser import askcolor
 
 class Janela:
     def __init__(self):
-        self.controller = Void()
+    # ----------- Janela ------------------
         self.janela = Tk()
         self.janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
         largura = self.janela.winfo_screenwidth()
         altura = self.janela.winfo_screenheight()
         self.janela.geometry(f"{largura}x{altura}+0+0")
+        self.janela.state("zoomed")
+    # ----------- Janela ------------------
+    
+        self.controller = Void()
         self.objeto = Void()
         self.forma = StringVar()
 
-        self.cor_linha = "black"
-        self.cor_preenchimento = "black"
     # ------ Fazendo a Barra de Escolhas ----
         self.FrameGrid = Frame(self.janela, bg="#271450", borderwidth=3, relief="flat")
         self.CanvaGrid = Canvas(self.janela, bg="#FAF6EE", borderwidth=3, relief="ridge")
-
     # ------ Fazendo a Barra de Escolhas ----
-
+    # --------- Cores Iniciais -------------
+        self.cor_linha = "#000000"
+        self.cor_preenchimento = "#000000"
+    # --------- Cores Iniciais -------------
     # -------------- BUTOES -----------------
         self.DesenharLinhas = Radiobutton(
                                 self.FrameGrid,
@@ -156,9 +160,6 @@ class Janela:
             highlightthickness=0
         )
     # -------------- Caixas de Selecao --------------
-    # -------------- Opcoes Iniciais ----------------
-        self.Espessura.set(4)
-    # -------------- Opcoes Iniciais ----------------
     # --------------- Grid --------------------------
         self.janela.rowconfigure(1, weight=1)
         self.janela.columnconfigure(0, weight=1)
