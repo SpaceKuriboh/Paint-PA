@@ -1,6 +1,5 @@
 from model import *
 from view import *
-
 class Controller:
     '''Classe responsável por controlar o programa principal, ele recebe a classe da Janela para assim controlar-la utilizando o model'''
     def __init__(self, view):
