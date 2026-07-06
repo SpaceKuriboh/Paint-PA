@@ -1,6 +1,5 @@
 from model import *
 from tkinter.colorchooser import askcolor
-
 class Janela:
     def __init__(self):
     # ----------- Janela ------------------

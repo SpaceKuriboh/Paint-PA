@@ -1,22 +1,37 @@
 from controller import *
 from model import Void
 
-
-class State(ABC):
-    @abstractmethod
+class State:
     def iniciar_forma(self, controller, event):
-        pass
-    @abstractmethod
+        xi = event.x
+        yi = event.y
+        controller.objeto = controller.formas[controller.forma.get()](
+            controller.canva,
+            xi, yi, xi, yi,
+            controller.view.cor_linha,
+            controller.espessura.get(),
+            fill=controller.view.cor_preenchimento,
+            temp=True
+        )
     def atualizar_forma(self, tipo, controller, event):
-        pass
-    @abstractmethod
+        if tipo == "B1":
+            controller.objeto.xf = event.x
+            controller.objeto.yf = event.y
+            controller.canva.delete("True")
+            controller.objeto.temp = True
+            controller.objeto.desenhar()
+
     def gravar_forma(self, controller, event):
-        pass
+        controller.objeto.xf = event.x
+        controller.objeto.yf = event.y
+        controller.canva.delete("True")
+        controller.objeto.temp = False
+        controller.objeto.desenhar()
 
 
 class Controller_livre(State):
     def __init__(self):
-        pass
+        print("Controlador Atual: Livre")
     def iniciar_forma(self, controller,event):
         xi = event.x
         yi = event.y
@@ -35,118 +50,27 @@ class Controller_livre(State):
             controller.objeto.desenhar()
             controller.objeto.temp = False
             controller.objeto.xi, controller.objeto.yi = controller.objeto.xf, controller.objeto.yf
-    def gravar_forma(self, controller,event):
-        controller.objeto.xf = event.x
-        controller.objeto.yf = event.y
-        controller.canva.delete("True")
-        controller.objeto.temp = False
-        controller.objeto.desenhar()
+
 
 class Controller_reta(State):
-    def iniciar_forma(self, controller,event):
-        xi = event.x
-        yi = event.y
-        controller.objeto = controller.formas[controller.forma.get()](
-        controller.canva,
-        xi, yi, xi, yi,
-        controller.view.cor_linha,
-        controller.espessura.get(),
-        fill=controller.view.cor_preenchimento,
-        temp=True
-            )
-    def atualizar_forma(self, tipo, controller,event):
-        if tipo=="B1":
-            controller.objeto.xf = event.x
-            controller.objeto.yf = event.y
-            controller.canva.delete("True")
-            controller.objeto.temp = True
-            controller.objeto.desenhar()
-    def gravar_forma(self, controller,event):
-        controller.objeto.xf = event.x
-        controller.objeto.yf = event.y
-        controller.canva.delete("True")
-        controller.objeto.temp = False
-        controller.objeto.desenhar()
+    def __init__(self):
+        print("Controlador Atual: Reta")
 
 class Controller_retangulo(State):
-    def iniciar_forma(self, controller,event):
-        xi = event.x
-        yi = event.y
-        controller.objeto = controller.formas[controller.forma.get()](
-        controller.canva,
-        xi, yi, xi, yi,
-        controller.view.cor_linha,
-        controller.espessura.get(),
-        fill=controller.view.cor_preenchimento,
-        temp=True
-            )
-    def atualizar_forma(self, tipo,controller,event):
-        if tipo=="B1":
-            controller.objeto.xf = event.x
-            controller.objeto.yf = event.y
-            controller.canva.delete("True")
-            controller.objeto.temp = True
-            controller.objeto.desenhar()
-    def gravar_forma(self, controller,event):
-        controller.objeto.xf = event.x
-        controller.objeto.yf = event.y
-        controller.canva.delete("True")
-        controller.objeto.temp = False
-        controller.objeto.desenhar()
+    def __init__(self):
+        print("Controlador Atual: Retangulo")
 
 class Controller_oval(State):
-    def iniciar_forma(self, controller,event):
-        xi = event.x
-        yi = event.y
-        controller.objeto = controller.formas[controller.forma.get()](
-        controller.canva,
-        xi, yi, xi, yi,
-        controller.view.cor_linha,
-        controller.espessura.get(),
-        fill=controller.view.cor_preenchimento,
-        temp=True
-            )
-    def atualizar_forma(self, tipo, controller,event):
-        if tipo == "B1":
-            controller.objeto.xf = event.x
-            controller.objeto.yf = event.y
-            controller.canva.delete("True")
-            controller.objeto.temp = True
-            controller.objeto.desenhar()
-    def gravar_forma(self, controller,event):
-        controller.objeto.xf = event.x
-        controller.objeto.yf = event.y
-        controller.canva.delete("True")
-        controller.objeto.temp = False
-        controller.objeto.desenhar()
+    def __init__(self):
+        print("Controlador Atual: Oval")
 
 class Controller_circulo(State):
-    def iniciar_forma(self, controller,event):
-        xi = event.x
-        yi = event.y
-        controller.objeto = controller.formas[controller.forma.get()](
-        controller.canva,
-        xi, yi, xi, yi,
-        controller.view.cor_linha,
-        controller.espessura.get(),
-        fill=controller.view.cor_preenchimento,
-        temp=True
-            )
-    def atualizar_forma(self, tipo, controller,event):
-        if tipo == "B1":
-            controller.objeto.xf = event.x
-            controller.objeto.yf = event.y
-            controller.canva.delete("True")
-            controller.objeto.temp = True
-            controller.objeto.desenhar()
-    def gravar_forma(self, controller,event):
-        controller.objeto.xf = event.x
-        controller.objeto.yf = event.y
-        controller.canva.delete("True")
-        controller.objeto.temp = False
-        controller.objeto.desenhar()
+    def __init__(self):
+        print("Controlador Atual: Circullo")
 
 class Controller_poligono(State):
+    def __init__(self):
+        print("Controlador Atual: Poligono")
     def iniciar_forma(self, controller,event):
         if isinstance(controller.objeto, Poligono):
             if controller.objeto.marcarponto(event):
