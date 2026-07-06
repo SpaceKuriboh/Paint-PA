@@ -5,11 +5,11 @@ from tkinter.ttk import Combobox
 
 
 class Void:
-    def iniciarforma(self):
+    def iniciar_forma(self,controller, event):
         pass
-    def atualizarforma(self):
+    def atualizar_forma(self,tipo,controller,event):
         pass
-    def gravarforma(self):
+    def gravar_forma(self,controller,event):
         pass
     def verificarpoligono(self):
         pass

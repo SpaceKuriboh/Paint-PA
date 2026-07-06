@@ -7,6 +7,7 @@ class Controller:
         self.view = view
         self.canva = view.CanvaGrid
         self.forma = view.forma
+        self.controlador=Void()
         self.objeto = view.objeto
         self.espessura = view.Espessura
         self.eventos()
@@ -18,10 +19,9 @@ class Controller:
             "linha": Reta,
             "poligono": Poligono
         }
-        
         self.estados = {
             "livre": Controller_livre,
-            "reta": Controller_reta,
+            "linha": Controller_reta,
             "retangulo": Controller_retangulo,
             "oval": Controller_oval,
             "circulo": Controller_circulo,
@@ -29,9 +29,22 @@ class Controller:
         }
         
         self.estado = None
-    
+    def iniciar(self,eventos):
+        self.controlador.iniciar_forma(self,eventos)
+    def atualizar(self,eventos):
+        self.controlador.atualizar_forma("B1",self,eventos)
+    def gravar(self,eventos):
+        self.controlador.gravar_forma(self,eventos)
+    def atualizarpoligono(self,eventos):
+        self.controlador.atualizar_forma("M",self,eventos)
     def eventos(self):
-        self.canva.bind("<ButtonPress-1>", self.iniciarforma)
+        self.canva.bind("<ButtonPress-1>", self.iniciar)
         self.canva.bind("<B1-Motion>", self.atualizar)
         self.canva.bind("<Motion>", self.atualizarpoligono)
         self.canva.bind("<ButtonRelease-1>", self.gravar)
+    def mudar_controlador(self):
+        self.controlador=self.estados[self.forma.get()]()
+    def verificarpoligono(self):
+        if isinstance(self.objeto, Poligono):
+            self.objeto = Void()
+            self.canva.delete("true2", "True")

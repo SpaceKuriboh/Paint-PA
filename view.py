@@ -1,4 +1,3 @@
-from controller import *
 from model import *
 from tkinter.colorchooser import askcolor
 
@@ -10,7 +9,7 @@ class Janela:
         largura = self.janela.winfo_screenwidth()
         altura = self.janela.winfo_screenheight()
         self.janela.geometry(f"{largura}x{altura}+0+0")
-        self.janela.state("zoomed")
+        self.janela.state("normal")
     # ----------- Janela ------------------
     
         self.controller = Void()
@@ -39,7 +38,7 @@ class Janela:
                                 activebackground="#703892",
                                 selectcolor="#703892",
                                 font=("Arial", 10, "bold"),
-                                command=self.controller.verificarpoligono
+                                command=self.mudar_botao
                             )
         self.DesenharLivre = Radiobutton(
                                 self.FrameGrid,
@@ -54,7 +53,7 @@ class Janela:
                                 activebackground="#703892",
                                 selectcolor="#703892",
                                 font=("Arial", 10, "bold"),
-                                command=self.controller.verificarpoligono
+                                command=self.mudar_botao
                             )
         self.DesenharRetangulos = Radiobutton(
                                     self.FrameGrid,
@@ -69,7 +68,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.DesenharCirculos = Radiobutton(
                                             self.FrameGrid,
@@ -84,7 +83,7 @@ class Janela:
                                             activebackground="#703892",
                                             selectcolor="#703892",
                                             font=("Arial", 10, "bold"),
-                                            command=self.controller.verificarpoligono
+                                            command=self.mudar_botao
                                         )
         self.DesenharPoligonos = Radiobutton(
                                     self.FrameGrid,
@@ -99,7 +98,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.DesenharOvais = Radiobutton(
                                     self.FrameGrid,
@@ -114,7 +113,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.ApagarTudo = Button(
                                 self.FrameGrid,
@@ -125,7 +124,7 @@ class Janela:
                                 activeforeground="#F2E9E4",
                                 activebackground="#703892",
                                 font=("Arial", 12, "bold"),
-                                command=lambda: [self.CanvaGrid.delete("all"), self.controller.verificarpoligono()],
+                                command=lambda: [self.mudar_botao,self.CanvaGrid.delete("all")]
                             )
     # -------------- BUTOES -------------------------
     # -------------- Caixas de Selecao --------------
@@ -199,3 +198,7 @@ class Janela:
             self.cor_preenchimento = cor[1]
             self.BotaoCorPreenchimento.config(bg=self.cor_preenchimento)
     # -------------- Seletores de Cor --------------
+
+    def mudar_botao(self):
+        self.controller.mudar_controlador()
+        self.controller.verificarpoligono()
