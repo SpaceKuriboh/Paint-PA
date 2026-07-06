@@ -1,4 +1,4 @@
-from controller import Controller
+from pasta_controller import *
 from view import Janela
 
 janelaPrincipal = Janela()
