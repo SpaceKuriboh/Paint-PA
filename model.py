@@ -5,15 +5,19 @@ from tkinter.ttk import Combobox
 
 
 class Void:
-    def iniciarforma(self):
+    def __init__(self):
+        self.caminho=None
+    def iniciar_forma(self,controller, event):
         pass
-    def atualizarforma(self):
+    def atualizar_forma(self,tipo,controller,event):
         pass
-    def gravarforma(self):
+    def gravar_forma(self,controller,event):
         pass
     def verificarpoligono(self):
         pass
     def desenhar(self):
+        pass
+    def obtercaminho(self):
         pass
 
 class Pincel(ABC):

@@ -1,19 +1,55 @@
-from controller import *
 from model import *
 from tkinter.colorchooser import askcolor
-
+from tkinter.filedialog import *
 class Janela:
     def __init__(self):
+        self.controller = Void()
+        self.pergunta=Tk()
+        self.pergunta.title("Abrir ou Novo")
+        largura = self.pergunta.winfo_screenwidth()
+        altura = self.pergunta.winfo_screenheight()
+        self.pergunta.geometry(f"{largura}x{altura}+0+0")
+        self.pergunta.state("normal")
+        self.FramePergunta = Frame(self.pergunta, bg="#271450", borderwidth=3, relief="flat")
+        self.Novo = Button(
+            self.FramePergunta,
+            text="Novo",
+            width=12,
+            bg="#9C5592",
+            fg="#F2E9E4",
+            activeforeground="#F2E9E4",
+            activebackground="#703892",
+            font=("Arial", 12, "bold"),
+            command=self.pergunta.destroy
+        )
+        self.Abrir = Button(
+            self.FramePergunta,
+            text="Abrir",
+            width=12,
+            variable=self.controller.caminho,
+            value=,
+            bg="#9C5592",
+            fg="#F2E9E4",
+            activeforeground="#F2E9E4",
+            activebackground="#703892",
+            font=("Arial", 12, "bold"),
+            command=lambda: [self.pergunta.destroy, self.controller.obtercaminho]
+        )
+        self.pergunta.rowconfigure(1, weight=1)
+        self.pergunta.columnconfigure(0, weight=1)
+        self.FramePergunta.grid(row=0, column=0, sticky="ew")
+        self.Novo.grid(row=0, column=0, padx=5, pady=5)
+        self.Abrir.grid(row=0, column=1, padx=5, pady=5)
+        self.pergunta.mainloop()
     # ----------- Janela ------------------
         self.janela = Tk()
         self.janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
         largura = self.janela.winfo_screenwidth()
         altura = self.janela.winfo_screenheight()
         self.janela.geometry(f"{largura}x{altura}+0+0")
-        self.janela.state("zoomed")
+        self.janela.state("normal")
     # ----------- Janela ------------------
     
-        self.controller = Void()
         self.objeto = Void()
         self.forma = StringVar()
 
@@ -39,7 +75,7 @@ class Janela:
                                 activebackground="#703892",
                                 selectcolor="#703892",
                                 font=("Arial", 10, "bold"),
-                                command=self.controller.verificarpoligono
+                                command=self.mudar_botao
                             )
         self.DesenharLivre = Radiobutton(
                                 self.FrameGrid,
@@ -54,7 +90,7 @@ class Janela:
                                 activebackground="#703892",
                                 selectcolor="#703892",
                                 font=("Arial", 10, "bold"),
-                                command=self.controller.verificarpoligono
+                                command=self.mudar_botao
                             )
         self.DesenharRetangulos = Radiobutton(
                                     self.FrameGrid,
@@ -69,7 +105,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.DesenharCirculos = Radiobutton(
                                             self.FrameGrid,
@@ -84,7 +120,7 @@ class Janela:
                                             activebackground="#703892",
                                             selectcolor="#703892",
                                             font=("Arial", 10, "bold"),
-                                            command=self.controller.verificarpoligono
+                                            command=self.mudar_botao
                                         )
         self.DesenharPoligonos = Radiobutton(
                                     self.FrameGrid,
@@ -99,7 +135,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.DesenharOvais = Radiobutton(
                                     self.FrameGrid,
@@ -114,7 +150,7 @@ class Janela:
                                     activebackground="#703892",
                                     selectcolor="#703892",
                                     font=("Arial", 10, "bold"),
-                                    command=self.controller.verificarpoligono
+                                    command=self.mudar_botao
                                 )
         self.ApagarTudo = Button(
                                 self.FrameGrid,
@@ -125,7 +161,7 @@ class Janela:
                                 activeforeground="#F2E9E4",
                                 activebackground="#703892",
                                 font=("Arial", 12, "bold"),
-                                command=lambda: [self.CanvaGrid.delete("all"), self.controller.verificarpoligono()],
+                                command=lambda: [self.mudar_botao,self.CanvaGrid.delete("all")]
                             )
     # -------------- BUTOES -------------------------
     # -------------- Caixas de Selecao --------------
@@ -199,3 +235,7 @@ class Janela:
             self.cor_preenchimento = cor[1]
             self.BotaoCorPreenchimento.config(bg=self.cor_preenchimento)
     # -------------- Seletores de Cor --------------
+
+    def mudar_botao(self):
+        self.controller.mudar_controlador()
+        self.controller.verificarpoligono()
