@@ -11,7 +11,7 @@ class Controller:
         self.objeto = view.objeto
         self.espessura = view.Espessura
         self.figuras=[]
-        self.caminho=StringVar()
+        self.caminho=None
         self.eventos()
         self.formas = {
             "retangulo": Retangulo,
@@ -50,5 +50,22 @@ class Controller:
         if isinstance(self.objeto, Poligono):
             self.objeto = Void()
             self.canva.delete("true2", "True")
-    def obtercaminho(self):
-        self.figuras=open(self.caminho)
+    def construirtudo(self):
+            for c in self.figuras:
+                param_fig=c.split(",")
+                if param_fig[-1]!="poligono":
+                    self.formas[param_fig[-1]](
+                        self.canva,
+                        xi=int(param_fig[0]), yi=int(param_fig[1]), xf=int(param_fig[2]), yf=int(param_fig[3]),
+                        expessura=int(param_fig[6]),
+                        outline=param_fig[4],
+                        figuras=self.figuras,
+                        fill=param_fig[5],
+                        temp=False
+                    ).desenhar()
+                else:
+                    self.canva.create_polygon(
+                    *param_fig[:-4],
+                    width=int(param_fig[-2]),
+                    outline=param_fig[-4],
+                    fill=param_fig[-3])

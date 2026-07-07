@@ -7,6 +7,7 @@ from tkinter.ttk import Combobox
 class Void:
     def __init__(self):
         self.caminho=None
+        self.figuras=None
     def iniciar_forma(self,controller, event):
         pass
     def atualizar_forma(self,tipo,controller,event):
@@ -17,17 +18,21 @@ class Void:
         pass
     def desenhar(self):
         pass
-    def obtercaminho(self):
+    def mudar_controlador(self):
+        pass
+    def construirtudo(self):
+        print(1)
         pass
 
 class Pincel(ABC):
 
-    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, fill=None, temp=None):
+    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, figuras=None, fill=None, temp=None):
         self.canva = canva
         self.xi = xi
         self.yi = yi
         self.xf = xf
         self.yf = yf
+        self.figuras=figuras
         self.outline = outline
         self.expessura = expessura
         self.fill = fill
@@ -82,6 +87,7 @@ class Livre(Pincel):
             tags=str(self.temp),
             width=self.expessura,
         )
+        self.figuras.append(f"{self.xi},{self.yi},{self.xf},{self.yf},{self.outline},{self.outline},{self.expessura},linha")
 
 
 class Reta(Pincel):
