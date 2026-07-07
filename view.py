@@ -1,7 +1,56 @@
+import controller
 from model import *
 from tkinter.colorchooser import askcolor
+from tkinter.filedialog import *
+class JanelaPergunta:
+    def __init__(self,janela):
+        self.janela=janela
+        self.pergunta=Tk()
+        self.pergunta.title("Abrir ou Novo")
+        largura = self.pergunta.winfo_screenwidth()
+        altura = self.pergunta.winfo_screenheight()
+        self.pergunta.geometry(f"{largura}x{altura}+0+0")
+        self.pergunta.state("normal")
+        self.FramePergunta = Frame(self.pergunta, bg="#271450", borderwidth=3, relief="flat")
+        self.Novo = Button(
+            self.FramePergunta,
+            text="Novo",
+            width=12,
+            bg="#9C5592",
+            fg="#F2E9E4",
+            activeforeground="#F2E9E4",
+            activebackground="#703892",
+            font=("Arial", 12, "bold"),
+            command=self.fecharjanela
+        )
+        self.Abrir = Button(
+            self.FramePergunta,
+            text="Abrir",
+            width=12,
+            bg="#9C5592",
+            fg="#F2E9E4",
+            activeforeground="#F2E9E4",
+            activebackground="#703892",
+            font=("Arial", 12, "bold"),
+            command=self.obter_arquivo
+        )
+        self.pergunta.rowconfigure(1, weight=1)
+        self.pergunta.columnconfigure(0, weight=1)
+        self.FramePergunta.grid(row=0, column=0, sticky="ew")
+        self.Novo.grid(row=0, column=0, padx=5, pady=5)
+        self.Abrir.grid(row=0, column=1, padx=5, pady=5)
+        self.pergunta.mainloop()
+    def fecharjanela(self):
+        self.janela.janela.deiconify()
+        self.pergunta.destroy()
+    def obter_arquivo(self):
+        self.janela.controller.figuras = open(askopenfilename(defaultextension=".chdd",filetypes=(("Arquivos Cheddar", "*.chdd"),("Todos os arquivos", "*.*")))).read().split("|")[:-1]
+        print(self.janela.controller.figuras)
+        self.janela.controller.construirtudo()
+        self.fecharjanela()
 class Janela:
     def __init__(self):
+        self.controller=Void()
     # ----------- Janela ------------------
         self.janela = Tk()
         self.janela.title("Paint 2.0 ULTRA BLASTER SUPER EXTRA CHEDDAR PLUS PLUS PLUS")
@@ -11,7 +60,6 @@ class Janela:
         self.janela.state("normal")
     # ----------- Janela ------------------
     
-        self.controller = Void()
         self.objeto = Void()
         self.forma = StringVar()
 
@@ -123,8 +171,19 @@ class Janela:
                                 activeforeground="#F2E9E4",
                                 activebackground="#703892",
                                 font=("Arial", 12, "bold"),
-                                command=lambda: [self.mudar_botao,self.CanvaGrid.delete("all")]
+                                command= self.apagartudo
                             )
+        self.Salvar = Button(
+                    self.FrameGrid,
+                    text="Salvar Como",
+                    width=12,
+                    bg="#9C5592",
+                    fg="#F2E9E4",
+                    activeforeground="#F2E9E4",
+                    activebackground="#703892",
+                    font=("Arial", 12, "bold"),
+                    command=self.criar_arquivo
+        )
     # -------------- BUTOES -------------------------
     # -------------- Caixas de Selecao --------------
         self.TXTLinha = Label(self.FrameGrid, text="Cor da Linha: ", fg="#F2E9E4", bg="#271450", font=("Arial", 12, "bold"))
@@ -172,18 +231,20 @@ class Janela:
         self.DesenharPoligonos.grid(row=0, column=4, padx=5, pady=5)
         self.DesenharOvais.grid(row=0, column=5, padx=5, pady=5)
         self.ApagarTudo.grid(row=0, column=6, padx=5, pady=5)
+        self.Salvar.grid(row=0, column=7, padx=5, pady=5)
+
         # ----------- Butoes --------------------
         # -------------- Caixas de Selecao --------------
-        self.TXTLinha.grid(row=0, column=7, padx=1, pady=5)
-        self.BotaoCorLinha.grid(row=0, column=8, padx=5, pady=5)
+        self.TXTLinha.grid(row=0, column=8, padx=1, pady=5)
+        self.BotaoCorLinha.grid(row=0, column=9, padx=5, pady=5)
 
-        self.TXTPreenchimento.grid(row=0, column=9, padx=1, pady=5)
-        self.BotaoCorPreenchimento.grid(row=0, column=10, padx=5, pady=5)
+        self.TXTPreenchimento.grid(row=0, column=10, padx=1, pady=5)
+        self.BotaoCorPreenchimento.grid(row=0, column=11, padx=5, pady=5)
 
-        self.TXTEspessura.grid(row=0, column=11, padx=1, pady=5)
-        self.Espessura.grid(row=0, column=12, padx=5, pady=5)
+        self.TXTEspessura.grid(row=0, column=12, padx=1, pady=5)
+        self.Espessura.grid(row=0, column=13, padx=5, pady=5)
         # -------------- Caixas de Selecao --------------
-
+        self.janela.withdraw()
     # -------------- Seletores de Cor --------------
     def escolher_cor_linha(self):
         cor = askcolor(title="Cor da linha", initialcolor=self.cor_linha)
@@ -201,3 +262,11 @@ class Janela:
     def mudar_botao(self):
         self.controller.mudar_controlador()
         self.controller.verificarpoligono()
+    def apagartudo(self):
+        self.controller.figuras=[]
+        self.CanvaGrid.delete("all")
+    def criar_arquivo(self):
+        self.controller.caminho=asksaveasfilename(defaultextension=".chdd",filetypes=[("Arquivos Cheddar", "*.chdd")])
+        with open(self.controller.caminho, "w") as chdd:
+            for c in self.controller.figuras:
+                chdd.write(c+"|")

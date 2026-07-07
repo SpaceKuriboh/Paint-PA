@@ -27,6 +27,7 @@ class State:
         controller.canva.delete("True")
         controller.objeto.temp = False
         controller.objeto.desenhar()
+        controller.figuras.append(f"{vars(controller.objeto)["xi"]},{vars(controller.objeto)["yi"]},{vars(controller.objeto)["xf"]},{vars(controller.objeto)["yf"]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
 
 
 class Controller_livre(State):
@@ -40,6 +41,7 @@ class Controller_livre(State):
             xi, yi, xi, yi,
             controller.view.cor_linha,
             controller.espessura.get(),
+            figuras=controller.figuras,
             fill=controller.view.cor_preenchimento,
             temp=True
         )
@@ -50,7 +52,6 @@ class Controller_livre(State):
             controller.objeto.desenhar()
             controller.objeto.temp = False
             controller.objeto.xi, controller.objeto.yi = controller.objeto.xf, controller.objeto.yf
-
 
 class Controller_reta(State):
     def __init__(self):
@@ -74,6 +75,7 @@ class Controller_poligono(State):
     def iniciar_forma(self, controller,event):
         if isinstance(controller.objeto, Poligono):
             if controller.objeto.marcarponto(event):
+                controller.figuras.append(f"{str(vars(controller.objeto)["pontos"])[1:-1]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
                 controller.objeto = Void()
         else:
             xi = event.x
