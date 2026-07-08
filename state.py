@@ -7,7 +7,7 @@ class State:
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            xi, yi, xi, yi,
+            [xi, yi, xi, yi],
             controller.view.cor_linha,
             controller.espessura.get(),
             fill=controller.view.cor_preenchimento,
@@ -38,7 +38,7 @@ class Controller_livre(State):
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            xi, yi, xi, yi,
+            [xi, yi, xi, yi],
             controller.view.cor_linha,
             controller.espessura.get(),
             figuras=controller.figuras,
@@ -82,7 +82,7 @@ class Controller_poligono(State):
             yi = event.y
             controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            xi, yi, xi, yi,
+            [xi, yi],
             controller.view.cor_linha,
             controller.espessura.get(),
             fill=controller.view.cor_preenchimento,
