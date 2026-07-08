@@ -21,17 +21,16 @@ class Void:
     def mudar_controlador(self):
         pass
     def construirtudo(self):
-        print(1)
         pass
 
 class Pincel(ABC):
 
-    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, figuras=None, fill=None, temp=None):
+    def __init__(self, canva, lista, outline, expessura, figuras=None, fill=None, temp=None):
         self.canva = canva
-        self.xi = xi
-        self.yi = yi
-        self.xf = xf
-        self.yf = yf
+        self.xi = lista[0]
+        self.yi = lista[1]
+        self.xf = lista[2]
+        self.yf = lista[3]
         self.figuras=figuras
         self.outline = outline
         self.expessura = expessura
@@ -41,31 +40,35 @@ class Pincel(ABC):
 
 class Poligono:
 
-    def __init__(self, canva, xi, yi, xf, yf, outline, expessura, fill=None, temp=None):
+    def __init__(self, canva, lista, outline, expessura, fill=None, temp=None,figuras=None):
         self.canva = canva
-        self.pontos = [xi, yi]
-        self.xi, self.yi, self.xf, self.yf = xi, yi, xf, yf
+        self.pontos = lista
+        self.xi, self.yi, self.xf, self.yf = lista[0], lista[1], lista[0], lista[1]
         self.outline = outline
         self.fill = fill
         self.expessura = expessura
         self.inix, self.iniy = self.xi, self.yi
 
-    def desenhar(self, tag="True"):
-        self.canva.create_line(
-            self.xi,
-            self.yi,
-            self.xf,
-            self.yf,
-            fill=self.outline,
-            tags=tag,
-            width=self.expessura
-        )
-
+    def desenhar(self, tag="True",construir=None):
+        if construir:
+            self.poligonoFinal()
+        else:
+            self.canva.create_line(
+                self.xi,
+                self.yi,
+                self.xf,
+                self.yf,
+                fill=self.outline,
+                tags=tag,
+                width=self.expessura
+            )
+    def poligonoFinal(self):
+        self.canva.delete("True")
+        self.canva.delete("true2")
+        self.canva.create_polygon(*self.pontos, fill=self.fill, outline=self.outline, width=self.expessura)
     def marcarponto(self, event):
         if abs(event.x - self.inix) <= 8 and abs(event.y - self.iniy) <= 8:
-            self.canva.delete("True")
-            self.canva.delete("true2")
-            self.canva.create_polygon(*self.pontos, fill=self.fill, outline=self.outline, width=self.expessura)
+            self.poligonoFinal()
             return True
         else:
             self.pontos.extend([event.x, event.y])
@@ -77,7 +80,7 @@ class Poligono:
 
 class Livre(Pincel):
 
-    def desenhar(self):
+    def desenhar(self,construir=None):
         self.canva.create_line(
             self.xi,
             self.yi,
@@ -92,7 +95,7 @@ class Livre(Pincel):
 
 class Reta(Pincel):
 
-    def desenhar(self):
+    def desenhar(self,construir=None):
         self.canva.create_line(
             self.xi,
             self.yi,
@@ -106,7 +109,7 @@ class Reta(Pincel):
 
 class Retangulo(Pincel):
 
-    def desenhar(self):
+    def desenhar(self,construir=None):
         self.canva.create_rectangle(
             self.xi,
             self.yi,
@@ -121,7 +124,7 @@ class Retangulo(Pincel):
 
 class Oval(Pincel):
 
-    def desenhar(self):
+    def desenhar(self,construir=None):
         self.canva.create_oval(
             self.xi,
             self.yi,
@@ -136,7 +139,7 @@ class Oval(Pincel):
 
 class Circulo(Pincel):
 
-    def desenhar(self):
+    def desenhar(self,construir=None):
         raio = ((self.xf - self.xi) ** 2 + (self.yf - self.yi) ** 2) ** 0.5
         self.canva.create_oval(
             self.xi - raio,
