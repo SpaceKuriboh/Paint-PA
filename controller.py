@@ -53,12 +53,19 @@ class Controller:
     def construirtudo(self):
             for c in self.figuras:
                 param_fig=c.split(",")
-                self.formas[param_fig[-1]](
-                    self.canva,
-                    lista=list(map(int,param_fig[:-4])),
-                    expessura=int(param_fig[-2]),
+                if param_fig[-1]!="poligono":
+                    self.formas[param_fig[-1]](
+                        self.canva,
+                        xi=int(param_fig[0]), yi=int(param_fig[1]), xf=int(param_fig[2]), yf=int(param_fig[3]),
+                        expessura=int(param_fig[6]),
+                        outline=param_fig[4],
+                        figuras=self.figuras,
+                        fill=param_fig[5],
+                        temp=False
+                    ).desenhar()
+                else:
+                    self.canva.create_polygon(
+                    *param_fig[:-4],
+                    width=int(param_fig[-2]),
                     outline=param_fig[-4],
-                    figuras=self.figuras,
-                    fill=param_fig[-3],
-                    temp=False
-                ).desenhar(construir=True)
+                    fill=param_fig[-3])
