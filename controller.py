@@ -31,6 +31,7 @@ class Controller:
         }
         
         self.estado = None
+        self.objeto_atual = None
     def iniciar(self,eventos):
         self.controlador.iniciar_forma(self,eventos)
     def atualizar(self,eventos):
@@ -44,6 +45,9 @@ class Controller:
         self.canva.bind("<B1-Motion>", self.atualizar)
         self.canva.bind("<Motion>", self.atualizarpoligono)
         self.canva.bind("<ButtonRelease-1>", self.gravar)
+        self.canva.bind("<Delete>", self.apagar)
+        self.canva.bind("<Up>", self.subir)
+        self.canva.bind("<Down>", self.descer)
     def mudar_controlador(self):
         self.controlador=self.estados[self.forma.get()]()
     def verificarpoligono(self):
@@ -69,3 +73,9 @@ class Controller:
                     width=int(param_fig[-2]),
                     outline=param_fig[-4],
                     fill=param_fig[-3])
+    def apagar(self,eventos):
+        self.controlador.apagar_forma(self)
+    def subir(self,eventos):
+        self.controlador.subir(self)
+    def descer(self,eventos):
+        self.controlador.descer(self)
