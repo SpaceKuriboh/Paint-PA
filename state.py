@@ -7,7 +7,7 @@ class State:
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            [xi, yi, xi, yi],
+            xi, yi, xi, yi,
             controller.view.cor_linha,
             controller.espessura.get(),
             fill=controller.view.cor_preenchimento,
@@ -38,7 +38,7 @@ class Controller_livre(State):
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            [xi, yi, xi, yi],
+            xi, yi, xi, yi,
             controller.view.cor_linha,
             controller.espessura.get(),
             figuras=controller.figuras,
@@ -82,7 +82,7 @@ class Controller_poligono(State):
             yi = event.y
             controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            [xi, yi],
+            xi, yi, xi, yi,
             controller.view.cor_linha,
             controller.espessura.get(),
             fill=controller.view.cor_preenchimento,
@@ -98,3 +98,28 @@ class Controller_poligono(State):
 
     def gravar_forma(self, controller,event):
         pass
+
+class Controller_editar(State):
+    def __init__(self):
+        print("Controlador Atual: Editar")
+    def iniciar_forma(self, controller,event):
+        controller.posicao_inix = event.x
+        controller.posicao_iniy = event.y
+    def atualizar_forma(self, tipo, controller, event):
+        if tipo == "B1":
+            posicao_finalx = event.x
+            posicao_finaly = event.y
+            direcao_x = posicao_finalx - controller.posicao_inix
+            direcao_y = posicao_finaly - controller.posicao_iniy
+            controller.canva.move(controller.objeto_atual,direcao_x, direcao_y)
+            controller.posicao_inix = posicao_finalx
+            controller.posicao_iniy = posicao_finaly
+    def apagar_forma(self,controller):
+        controller.canva.delete(controller.objeto_atual)
+        controller.objeto_atual = None
+    def mudar_cor(self,controller):
+        controller.canva.itemconfig(controller.objeto_atual,fill=controller.view.cor_preenchimento)
+    def subir(self,controller):
+        controller.canva.tag_raise(controller.objeto_atual)
+    def descer(self,controller):
+        controller.canva.tag_lower(controller.objeto_atual)
