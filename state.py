@@ -32,8 +32,10 @@ class State:
         controller.figuras.append(
             f"{vars(controller.objeto)["xi"]},{vars(controller.objeto)["yi"]},{vars(controller.objeto)["xf"]},{vars(controller.objeto)["yf"]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
 
-    # ---- Ações de seleção: no-op aqui, só o Controller_selecionar implementa de verdade ----
     def mudar_cor_selecionada(self, controller, outline=None, fill=None):
+        pass
+
+    def mudar_espessura_selecionada(self, controller, width=None):
         pass
 
     def apagar_forma(self, controller, event):
@@ -43,6 +45,12 @@ class State:
         pass
 
     def colar_forma(self, controller, event):
+        pass
+    
+    def frente_selecionada(self, controller):
+        pass
+
+    def tras_selecionada(self, controller):
         pass
 
 
@@ -136,6 +144,7 @@ class Controller_selecionar(State):
         self.indice_selecionado = controller.figuras.encontrar(event.x, event.y)
         self.arrastando = self.indice_selecionado is not None
         self.ultimo_x, self.ultimo_y = event.x, event.y
+        self.redesenhar(controller)
 
     def atualizar_forma(self, tipo, controller, event):
         if tipo == "B1" and self.arrastando and self.indice_selecionado is not None:
@@ -174,6 +183,25 @@ class Controller_selecionar(State):
             self.indice_selecionado = len(controller.figuras) - 1
             self.redesenhar(controller)
 
+    def frente_selecionada(self, controller):
+        if self.indice_selecionado is not None:
+            self.indice_selecionado = controller.figuras.frente(self.indice_selecionado)
+            self.redesenhar(controller)
+
+    def tras_selecionada(self, controller):
+        if self.indice_selecionado is not None:
+            self.indice_selecionado = controller.figuras.tras(self.indice_selecionado)
+            self.redesenhar(controller)
+
     def redesenhar(self, controller):
         controller.canva.delete("all")
         controller.construirtudo()
+        self.destacar(controller)
+
+    def destacar(self, controller):
+        if self.indice_selecionado is not None and 0 <= self.indice_selecionado < len(controller.figuras):
+            x0, y0, x1, y1 = controller.figuras.verificar_clique(self.indice_selecionado)
+            controller.canva.create_rectangle(
+                x0 - 3, y0 - 3, x1 + 3, y1 + 3,
+                outline="red", width=2, dash=(4, 2), tags="selecao"
+            )

@@ -1,6 +1,3 @@
-from click import command
-
-import controller
 from model import *
 from tkinter.colorchooser import askcolor
 from tkinter.filedialog import *
@@ -263,7 +260,6 @@ class Janela:
         self.SelecionarFigura.grid(row=0, column=6, padx=5, pady=5)
         self.ApagarTudo.grid(row=0, column=7, padx=5, pady=5)
         self.Salvar.grid(row=0, column=8, padx=5, pady=5)
-
         # ----------- Butoes --------------------
         # -------------- Caixas de Selecao --------------
         self.TXTLinha.grid(row=0, column=9, padx=1, pady=5)
@@ -285,7 +281,6 @@ class Janela:
             self.BotaoCorLinha.config(bg=self.cor_linha)
             self.controller.mudar_cor(outline=self.cor_linha)
 
-
     def escolher_cor_preenchimento(self):
         cor = askcolor(title="Cor do preenchimento", initialcolor=self.cor_preenchimento)
         if cor[1]:
@@ -293,9 +288,9 @@ class Janela:
             self.BotaoCorPreenchimento.config(bg=self.cor_preenchimento)
             self.controller.mudar_cor(fill=self.cor_preenchimento)
 
-    # -------------- Seletores de Cor --------------
-    def escolher_espessura(self,oi):
+    def escolher_espessura(self, oi):
         self.controller.mudar_espessura(oi)
+    # -------------- Seletores de Cor --------------
 
     def mudar_botao(self):
         self.controller.mudar_controlador()

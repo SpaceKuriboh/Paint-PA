@@ -15,7 +15,6 @@ class Controller:
         self.espessura = view.Espessura
         self.figuras = Camadas()
         self.caminho = None
-        self.eventos()
         self.formas = {
             "retangulo": Retangulo,
             "oval": Oval,
@@ -33,36 +32,8 @@ class Controller:
             "poligono": Controller_poligono,
             "selecionar": Controller_selecionar
         }
-
         self.estado = None
-
-    def iniciar(self, eventos):
-        self.canva.focus_set()
-        self.controlador.iniciar_forma(self, eventos)
-
-    def atualizar(self, eventos):
-        self.controlador.atualizar_forma("B1", self, eventos)
-
-    def gravar(self, eventos):
-        self.controlador.gravar_forma(self, eventos)
-
-    def atualizarpoligono(self, eventos):
-        self.controlador.atualizar_forma("M", self, eventos)
-
-    def mudar_cor(self, outline=None, fill=None):
-        self.controlador.mudar_cor_selecionada(self, outline=outline, fill=fill)
-
-    def mudar_espessura(self, width=None):
-        self.controlador.mudar_espessura_selecionada(self,  width=width)
-
-    def apagar(self, eventos):
-        self.controlador.apagar_forma(self, eventos)
-
-    def copiar(self, eventos):
-        self.controlador.copiar_forma(self, eventos)
-
-    def colar(self, eventos):
-        self.controlador.colar_forma(self, eventos)
+        self.eventos()
 
     def eventos(self):
         self.canva.bind("<ButtonPress-1>", self.iniciar)
@@ -73,6 +44,21 @@ class Controller:
         self.canva.bind("<BackSpace>", self.apagar)
         self.canva.bind("<Control-c>", self.copiar)
         self.canva.bind("<Control-v>", self.colar)
+        self.canva.bind("<Up>", self.frente)
+        self.canva.bind("<Down>", self.tras)
+
+    def iniciar(self, eventos):
+        self.canva.focus_set()
+        self.controlador.iniciar_forma(self, eventos)
+
+    def atualizar(self, eventos):
+        self.controlador.atualizar_forma("B1", self, eventos)
+
+    def atualizarpoligono(self, eventos):
+        self.controlador.atualizar_forma("M", self, eventos)
+
+    def gravar(self, eventos):
+        self.controlador.gravar_forma(self, eventos)
 
     def mudar_controlador(self):
         self.controlador = self.estados[self.forma.get()]()
@@ -81,6 +67,31 @@ class Controller:
         if isinstance(self.objeto, Poligono):
             self.objeto = Void()
             self.canva.delete("true2", "True")
+
+    def mudar_cor(self, outline=None, fill=None):
+        self.controlador.mudar_cor_selecionada(self, outline=outline, fill=fill)
+
+    def mudar_espessura(self, width=None):
+        self.controlador.mudar_espessura_selecionada(self, width=width)
+
+
+    def apagar(self, eventos):
+        self.controlador.apagar_forma(self, eventos)
+
+    def copiar(self, eventos):
+        self.controlador.copiar_forma(self, eventos)
+
+    def colar(self, eventos):
+        self.controlador.colar_forma(self, eventos)
+
+
+
+    def frente(self, eventos=None):
+        self.controlador.frente_selecionada(self)
+
+    def tras(self, eventos=None):
+        self.controlador.tras_selecionada(self)
+
 
     def construirtudo(self):
         for c in self.figuras:
