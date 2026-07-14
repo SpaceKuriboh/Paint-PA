@@ -1,18 +1,20 @@
 from controller import *
 from model import Void
 
+
 class State:
     def iniciar_forma(self, controller, event):
         xi = event.x
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            xi, yi, xi, yi,
+            [[xi, yi, xi, yi]],
             controller.view.cor_linha,
             controller.espessura.get(),
             fill=controller.view.cor_preenchimento,
             temp=True
         )
+
     def atualizar_forma(self, tipo, controller, event):
         if tipo == "B1":
             controller.objeto.xf = event.x
@@ -27,99 +29,179 @@ class State:
         controller.canva.delete("True")
         controller.objeto.temp = False
         controller.objeto.desenhar()
-        controller.figuras.append(f"{vars(controller.objeto)["xi"]},{vars(controller.objeto)["yi"]},{vars(controller.objeto)["xf"]},{vars(controller.objeto)["yf"]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
+        controller.figuras.append(
+            f"{vars(controller.objeto)["xi"]},{vars(controller.objeto)["yi"]},{vars(controller.objeto)["xf"]},{vars(controller.objeto)["yf"]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
+
+    def mudar_cor_selecionada(self, controller, outline=None, fill=None):
+        pass
+
+    def mudar_espessura_selecionada(self, controller, width=None):
+        pass
+
+    def apagar_forma(self, controller, event):
+        pass
+
+    def copiar_forma(self, controller, event):
+        pass
+
+    def colar_forma(self, controller, event):
+        pass
+    
+    def frente_selecionada(self, controller):
+        pass
+
+    def tras_selecionada(self, controller):
+        pass
 
 
 class Controller_livre(State):
     def __init__(self):
         print("Controlador Atual: Livre")
-    def iniciar_forma(self, controller,event):
+
+    def iniciar_forma(self, controller, event):
         xi = event.x
         yi = event.y
         controller.objeto = controller.formas[controller.forma.get()](
             controller.canva,
-            xi, yi, xi, yi,
+            [[xi, yi, xi, yi]],
             controller.view.cor_linha,
             controller.espessura.get(),
             figuras=controller.figuras,
             fill=controller.view.cor_preenchimento,
             temp=True
         )
-    def atualizar_forma(self, tipo, controller,event):
-        if tipo=="B1":
+
+    def atualizar_forma(self, tipo, controller, event):
+        if tipo == "B1":
             controller.objeto.xf = event.x
             controller.objeto.yf = event.y
             controller.objeto.desenhar()
             controller.objeto.temp = False
             controller.objeto.xi, controller.objeto.yi = controller.objeto.xf, controller.objeto.yf
 
+
 class Controller_reta(State):
     def __init__(self):
         print("Controlador Atual: Reta")
+
 
 class Controller_retangulo(State):
     def __init__(self):
         print("Controlador Atual: Retangulo")
 
+
 class Controller_oval(State):
     def __init__(self):
         print("Controlador Atual: Oval")
+
 
 class Controller_circulo(State):
     def __init__(self):
         print("Controlador Atual: Circullo")
 
+
 class Controller_poligono(State):
     def __init__(self):
         print("Controlador Atual: Poligono")
-    def iniciar_forma(self, controller,event):
+
+    def iniciar_forma(self, controller, event):
         if isinstance(controller.objeto, Poligono):
             if controller.objeto.marcarponto(event):
-                controller.figuras.append(f"{str(vars(controller.objeto)["pontos"])[1:-1]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
+                controller.figuras.append(
+                    f"{str(vars(controller.objeto)["pontos"])[1:-1]},{vars(controller.objeto)["outline"]},{vars(controller.objeto)["fill"]},{vars(controller.objeto)["expessura"]},{controller.forma.get()}")
                 controller.objeto = Void()
         else:
             xi = event.x
             yi = event.y
             controller.objeto = controller.formas[controller.forma.get()](
-            controller.canva,
-            xi, yi, xi, yi,
-            controller.view.cor_linha,
-            controller.espessura.get(),
-            fill=controller.view.cor_preenchimento,
-            temp=True
-                )
-        
-    def atualizar_forma(self, tipo, controller,event):
-        if tipo=="M" and isinstance(controller.objeto,Poligono):
+                controller.canva,
+                [xi, yi],
+                controller.view.cor_linha,
+                controller.espessura.get(),
+                fill=controller.view.cor_preenchimento,
+                temp=True
+            )
+
+    def atualizar_forma(self, tipo, controller, event):
+        if tipo == "M" and isinstance(controller.objeto, Poligono):
             controller.objeto.xf = event.x
             controller.objeto.yf = event.y
             controller.canva.delete("True")
             controller.objeto.desenhar()
 
-    def gravar_forma(self, controller,event):
+    def gravar_forma(self, controller, event):
         pass
 
-class Controller_editar(State):
+
+class Controller_selecionar(State):
     def __init__(self):
-        print("Controlador Atual: Editar")
-    def iniciar_forma(self, controller,event):
-        controller.posicao_inix = event.x
-        controller.posicao_iniy = event.y
+        print("Controlador Atual: Selecionar")
+        self.indice_selecionado = None
+        self.arrastando = False
+        self.copiado = None
+
+    def iniciar_forma(self, controller, event):
+        self.indice_selecionado = controller.figuras.encontrar(event.x, event.y)
+        self.arrastando = self.indice_selecionado is not None
+        self.ultimo_x, self.ultimo_y = event.x, event.y
+        self.redesenhar(controller)
+
     def atualizar_forma(self, tipo, controller, event):
-        if tipo == "B1":
-            posicao_finalx = event.x
-            posicao_finaly = event.y
-            direcao_x = posicao_finalx - controller.posicao_inix
-            direcao_y = posicao_finaly - controller.posicao_iniy
-            controller.canva.move(controller.objeto_atual,direcao_x, direcao_y)
-            controller.posicao_inix = posicao_finalx
-            controller.posicao_iniy = posicao_finaly
-    def apagar_forma(self,controller):
-        controller.canva.delete(controller.objeto_atual)
-        controller.objeto_atual = None
-    def mudar_cor(self,controller):
-        controller.canva.itemconfig(controller.objeto_atual,fill=controller.view.cor_preenchimento)
-    def subir(self,controller):
-        controller.canva.tag_raise(controller.objeto_atual)
-    def descer(self,controller):
-        controller.canva.tag_lower(controller.objeto_atual)
+        if tipo == "B1" and self.arrastando and self.indice_selecionado is not None:
+            dx = event.x - self.ultimo_x
+            dy = event.y - self.ultimo_y
+            controller.figuras.mover(self.indice_selecionado, dx, dy)
+            self.ultimo_x, self.ultimo_y = event.x, event.y
+            self.redesenhar(controller)
+
+    def gravar_forma(self, controller, event):
+        self.arrastando = False
+
+    def mudar_cor_selecionada(self, controller, outline=None, fill=None):
+        if self.indice_selecionado is not None:
+            controller.figuras.mudar_cor(self.indice_selecionado, outline=outline, fill=fill)
+            self.redesenhar(controller)
+
+    def mudar_espessura_selecionada(self, controller, width=None):
+        if self.indice_selecionado is not None:
+            controller.figuras.mudar_espessura(self.indice_selecionado, width=width)
+            self.redesenhar(controller)
+
+    def apagar_forma(self, controller, event):
+        if self.indice_selecionado is not None:
+            controller.figuras.remover(self.indice_selecionado)
+            self.indice_selecionado = None
+            self.redesenhar(controller)
+
+    def copiar_forma(self, controller, event):
+        if self.indice_selecionado is not None:
+            self.copiado = controller.figuras.obter(self.indice_selecionado)
+
+    def colar_forma(self, controller, event):
+        if self.copiado is not None:
+            controller.figuras.adicionar(self.copiado)
+            self.indice_selecionado = len(controller.figuras) - 1
+            self.redesenhar(controller)
+
+    def frente_selecionada(self, controller):
+        if self.indice_selecionado is not None:
+            self.indice_selecionado = controller.figuras.frente(self.indice_selecionado)
+            self.redesenhar(controller)
+
+    def tras_selecionada(self, controller):
+        if self.indice_selecionado is not None:
+            self.indice_selecionado = controller.figuras.tras(self.indice_selecionado)
+            self.redesenhar(controller)
+
+    def redesenhar(self, controller):
+        controller.canva.delete("all")
+        controller.construirtudo()
+        self.destacar(controller)
+
+    def destacar(self, controller):
+        if self.indice_selecionado is not None and 0 <= self.indice_selecionado < len(controller.figuras):
+            x0, y0, x1, y1 = controller.figuras.verificar_clique(self.indice_selecionado)
+            controller.canva.create_rectangle(
+                x0 - 3, y0 - 3, x1 + 3, y1 + 3,
+                outline="red", width=2, dash=(4, 2), tags="selecao"
+            )
