@@ -170,6 +170,21 @@ class Janela:
             font=("Arial", 10, "bold"),
             command=self.mudar_botao
         )
+        self.DesenharPoligonosRegulares = Radiobutton(
+            self.FrameGrid,
+            text="⬠",
+            width=5,
+            indicatoron=False,
+            variable=self.forma,
+            value="poligono_regular",
+            bg="#3B4C8C",
+            fg="#F2E9E4",
+            activeforeground="#F2E9E4",
+            activebackground="#703892",
+            selectcolor="#703892",
+            font=("Arial", 10, "bold"),
+            command=self.mudar_botao
+        )
         self.SelecionarFigura = Radiobutton(
             self.FrameGrid,
             text="Sel",
@@ -257,19 +272,20 @@ class Janela:
         self.DesenharCirculos.grid(row=0, column=3, padx=5, pady=5)
         self.DesenharPoligonos.grid(row=0, column=4, padx=5, pady=5)
         self.DesenharOvais.grid(row=0, column=5, padx=5, pady=5)
-        self.SelecionarFigura.grid(row=0, column=6, padx=5, pady=5)
-        self.ApagarTudo.grid(row=0, column=7, padx=5, pady=5)
-        self.Salvar.grid(row=0, column=8, padx=5, pady=5)
+        self.DesenharPoligonosRegulares.grid(row=0, column=6, padx=5, pady=5)
+        self.SelecionarFigura.grid(row=0, column=7, padx=5, pady=5)
+        self.ApagarTudo.grid(row=0, column=8, padx=5, pady=5)
+        self.Salvar.grid(row=0, column=9, padx=5, pady=5)
         # ----------- Butoes --------------------
         # -------------- Caixas de Selecao --------------
-        self.TXTLinha.grid(row=0, column=9, padx=1, pady=5)
-        self.BotaoCorLinha.grid(row=0, column=10, padx=5, pady=5)
+        self.TXTLinha.grid(row=0, column=10, padx=1, pady=5)
+        self.BotaoCorLinha.grid(row=0, column=11, padx=5, pady=5)
 
-        self.TXTPreenchimento.grid(row=0, column=11, padx=1, pady=5)
-        self.BotaoCorPreenchimento.grid(row=0, column=12, padx=5, pady=5)
+        self.TXTPreenchimento.grid(row=0, column=12, padx=1, pady=5)
+        self.BotaoCorPreenchimento.grid(row=0, column=13, padx=5, pady=5)
 
-        self.TXTEspessura.grid(row=0, column=13, padx=1, pady=5)
-        self.Espessura.grid(row=0, column=14, padx=5, pady=5)
+        self.TXTEspessura.grid(row=0, column=14, padx=1, pady=5)
+        self.Espessura.grid(row=0, column=15, padx=5, pady=5)
         # -------------- Caixas de Selecao --------------
         self.janela.withdraw()
 
@@ -292,6 +308,7 @@ class Janela:
         self.controller.mudar_espessura(oi)
     # -------------- Seletores de Cor --------------
 
+    # -------------- Ações de barra ----------------
     def mudar_botao(self):
         self.controller.mudar_controlador()
         self.controller.verificarpoligono()

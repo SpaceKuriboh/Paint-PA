@@ -4,7 +4,6 @@ from state import *
 
 
 class Controller:
-    '''Classe responsável por controlar o programa principal, ele recebe a classe da Janela para assim controlar-la utilizando o model'''
 
     def __init__(self, view):
         self.view = view
@@ -21,7 +20,8 @@ class Controller:
             "circulo": Circulo,
             "livre": Livre,
             "linha": Reta,
-            "poligono": Poligono
+            "poligono": Poligono,
+            "poligono_regular": PoligonoRegular
         }
         self.estados = {
             "livre": Controller_livre,
@@ -30,6 +30,7 @@ class Controller:
             "oval": Controller_oval,
             "circulo": Controller_circulo,
             "poligono": Controller_poligono,
+            "poligono_regular": Controller_poligono_regular,
             "selecionar": Controller_selecionar
         }
         self.estado = None
@@ -37,6 +38,7 @@ class Controller:
 
     def eventos(self):
         self.canva.bind("<ButtonPress-1>", self.iniciar)
+        self.canva.bind("<Control-ButtonPress-1>", self.iniciar_ctrl)
         self.canva.bind("<B1-Motion>", self.atualizar)
         self.canva.bind("<Motion>", self.atualizarpoligono)
         self.canva.bind("<ButtonRelease-1>", self.gravar)
@@ -44,12 +46,22 @@ class Controller:
         self.canva.bind("<BackSpace>", self.apagar)
         self.canva.bind("<Control-c>", self.copiar)
         self.canva.bind("<Control-v>", self.colar)
-        self.canva.bind("<Up>", self.frente)
-        self.canva.bind("<Down>", self.tras)
+        
+        self.canva.bind("<Right>", self.frente)
+        self.canva.bind("<Left>", self.tras)
+        self.canva.bind("<Up>", self.topo)
+        self.canva.bind("<Down>", self.fundo)
+        self.canva.bind("<ButtonPress-3>", self.adicionar_lado)
+        self.canva.bind("<Control-g>", self.agrupar)
+        self.canva.bind("<Control-u>", self.desagrupar)
 
     def iniciar(self, eventos):
         self.canva.focus_set()
         self.controlador.iniciar_forma(self, eventos)
+
+    def iniciar_ctrl(self, eventos):
+        self.canva.focus_set()
+        self.controlador.iniciar_forma(self, eventos, ctrl=True)
 
     def atualizar(self, eventos):
         self.controlador.atualizar_forma("B1", self, eventos)
@@ -60,11 +72,20 @@ class Controller:
     def gravar(self, eventos):
         self.controlador.gravar_forma(self, eventos)
 
+    def adicionar_lado(self, eventos):
+        self.controlador.adicionar_lado(self, eventos)
+
+    def agrupar(self, eventos=None):
+        self.controlador.agrupar_selecionada(self)
+
+    def desagrupar(self, eventos=None):
+        self.controlador.desagrupar_selecionada(self)
+
     def mudar_controlador(self):
         self.controlador = self.estados[self.forma.get()]()
 
     def verificarpoligono(self):
-        if isinstance(self.objeto, Poligono):
+        if isinstance(self.objeto, (Poligono, PoligonoRegular)):
             self.objeto = Void()
             self.canva.delete("true2", "True")
 
@@ -73,7 +94,6 @@ class Controller:
 
     def mudar_espessura(self, width=None):
         self.controlador.mudar_espessura_selecionada(self, width=width)
-
 
     def apagar(self, eventos):
         self.controlador.apagar_forma(self, eventos)
@@ -84,14 +104,17 @@ class Controller:
     def colar(self, eventos):
         self.controlador.colar_forma(self, eventos)
 
-
-
     def frente(self, eventos=None):
         self.controlador.frente_selecionada(self)
 
     def tras(self, eventos=None):
         self.controlador.tras_selecionada(self)
 
+    def topo(self, eventos=None):
+        self.controlador.topo_selecionada(self)
+
+    def fundo(self, eventos=None):
+        self.controlador.fundo_selecionada(self)
 
     def construirtudo(self):
         for c in self.figuras:
